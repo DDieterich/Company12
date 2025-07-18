@@ -38,5 +38,3 @@ alter pluggable database "&1." open;
 alter session set container = "&1.";
 alter profile "DEFAULT" limit password_life_time unlimited;
 alter session set container = "CDB$ROOT";
-
-select name from v$services;
