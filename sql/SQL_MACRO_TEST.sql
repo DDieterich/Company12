@@ -14,8 +14,10 @@ set trimspool on
 set termout on
 set verify off
 set echo off
-set timing on
+
+connect "sys@//localhost:1521/EE213CDB"
 set serveroutput on size unlimited format wrapped
+set timing on
 
 -- Confirm Environment
 select 'user: ' || u.username ||
@@ -70,19 +72,27 @@ grant create any view to BUILD_OWNER;
 
 -- Run Test01
 connect "LOCAL_OWNER@//localhost:1521/tstpdb02"
+set serveroutput on size unlimited format wrapped
+set timing on
 drop database link dbl1;
 create database link dbl1 connect to REMOTE_OWNER
    identified by "remote_owner" using '//localhost:1521/tstpdb01';
 select * from REMOTE_OWNER.tab1@dbl1;
 connect "BUILD_OWNER@//localhost:1521/tstpdb02"
+set serveroutput on size unlimited format wrapped
+set timing on
 create or replace view LOCAL_OWNER.vw1 as
    select * from REMOTE_OWNER.tab1@dbl1;
 connect "LOCAL_OWNER@//localhost:1521/tstpdb02"
+set serveroutput on size unlimited format wrapped
+set timing on
 grant select on LOCAL_OWNER.vw1 to BUILD_OWNER;
 select * from LOCAL_OWNER.vw1;
 
 -- Run Test02
 connect "LOCAL_OWNER@//localhost:1521/tstpdb02"
+set serveroutput on size unlimited format wrapped
+set timing on
 create or replace function LOCAL_OWNER.SQL_MACRO_TAB2
    return VARCHAR2 SQL_MACRO
 is
@@ -90,19 +100,24 @@ begin
    return 'select * from tab2';
 end SQL_MACRO_TAB2;
 /
-grant execute on LOCAL_OWNER.SQL_MACRO_TAB2 to BUILD_OWNER;
-select SQL_MACRO_TAB2() from dual;
 select * from SQL_MACRO_TAB2();
 create or replace view vw2 as
    select * from SQL_MACRO_TAB2();
+select * from vw2;
 connect "BUILD_OWNER@//localhost:1521/tstpdb02"
+set serveroutput on size unlimited format wrapped
+set timing on
 create or replace view LOCAL_OWNER.vw2 as
    select * from SQL_MACRO_TXT();
 connect "LOCAL_OWNER@//localhost:1521/tstpdb02"
+set serveroutput on size unlimited format wrapped
+set timing on
 select * from LOCAL_OWNER.vw2;
 
 -- Run Test03
 connect "LOCAL_OWNER@//localhost:1521/tstpdb02"
+set serveroutput on size unlimited format wrapped
+set timing on
 create or replace function LOCAL_OWNER.SQL_MACRO_TXT
    return NVARCHAR2 SQL_MACRO
 is
@@ -117,13 +132,20 @@ select DUMMY from SQL_MACRO_TXT();
 create or replace view vw2 as
    select * from SQL_MACRO_TXT();
 connect "BUILD_OWNER@//localhost:1521/tstpdb02"
+set serveroutput on size unlimited format wrapped
+set timing on
 create or replace view LOCAL_OWNER.vw2 as
    select * from SQL_MACRO_TXT();
 connect "LOCAL_OWNER@//localhost:1521/tstpdb02"
+set serveroutput on size unlimited format wrapped
+set timing on
 select * from LOCAL_OWNER.vw2;
 
 -- Drop 2 DPBs
 --ORA-01003: no statement parsed
+connect "sys@//localhost:1521/EE213CDB"
+set serveroutput on size unlimited format wrapped
+set timing on
 alter session set container = "CDB$ROOT";
 @drop_pdb "tstpdb01"
 @drop_pdb "tstpdb02"
