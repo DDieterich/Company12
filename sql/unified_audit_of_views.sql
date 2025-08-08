@@ -92,7 +92,7 @@ audit policy VIEW_SELECT_TEST_01;
 --noaudit policy VIEW_SELECT_TEST_01;
 -- Auditing Context is a Global Setting
 audit context namespace USERENV attributes SESSION_EDITION_NAME;
--- Reconnect to "audit context namespace" to take effect
+-- Reconnect for "audit context namespace" to take effect
 --noaudit context namespace USERENV attributes SESSION_EDITION_NAME;
 
 -- Confirm Audit Policy
