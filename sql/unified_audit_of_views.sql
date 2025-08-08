@@ -112,13 +112,14 @@ select * from audit_unified_policies
 select * from audit_unified_policy_comments;
 
 -- Test Unified Audit at PDB Level
+-- Generate Audit Records
 select * from view_owner.test_view_01;
 select * from view_owner.test_view_02;
 --If you are in delayed-write mode, you may need to flush
 --  the audit trail before you can see the audit records.
 --EXEC DBMS_AUDIT_MGMT.flush_unified_audit_trail;
-select * from unified_audit_trail
- order by event_timestamp_utc desc;
+-- Query the Audit Log
+select * from unified_audit_trail order by event_timestamp_utc desc;
 
 -- Setup User View of Audit Trail
 --drop view view_select_test_01_log;
@@ -140,12 +141,14 @@ select * from CDB_UNIFIED_AUDIT_TRAIL
  where object_schema = 'VIEW_OWNER'
   and  action_name = 'SELECT';
 
--- Login as View Owner and
+-- Login as View Owner
 connect "view_owner/view_owner@//localhost:1521/TSTPDB01"
 show user
 show con_name
+-- Generate 2 more Audit Records
 select * from view_owner.test_view_01;
 select * from view_owner.test_view_02 where bogus = 'error';
+-- Query the Audit Log
 select * from view_select_test_01_log;
 select event_timestamp_utc
       ,return_code
