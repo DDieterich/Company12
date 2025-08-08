@@ -36,9 +36,10 @@ select name from v$services;
 select * from v$version;
 
 -- Traditional Audit must be enabled for Mixed Mode Audit to function
--- Needed do enable Unified Audit without compiling database executable
--- alter system set audit_trail = 'db' scope=spfile;
--- restart database
+-- Needed to enable Unified Audit without compiling database executable
+alter system set audit_trail = 'db' scope=spfile;
+shutdown immediate
+startup
 
 -- Show Auditing Setting at CDB Level
 --select * from AUDITABLE_SYSTEM_ACTIONS;
